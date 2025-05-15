@@ -1,7 +1,7 @@
 # virtual-reality
 # Unity XR Device Position Tracking
 
-![XR Device](./xr_device.png)
+![XR Device](./images/use_sample.gif)
 ![XR Device](./xr_sample.png)
 
 ## Overview
