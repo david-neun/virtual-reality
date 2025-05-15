@@ -1,6 +1,9 @@
 # virtual-reality
 # Unity XR Device Position Tracking
 
+![XR Device](./xr_device.png)
+![XR Device](./xr_sample.png)
+
 ## Overview
 This Unity script demonstrates how to track and display the position of an XR input device (such as a VR controller) using Unity's XR Input APIs. The script continuously updates and displays the position values of the specified device on the screen via a UI Text element.
 
@@ -48,7 +51,7 @@ Values represent the XR device’s coordinates in Unity's virtual space (X, Y, Z
 ## Code Overview
 | Method | Description |
 |---|---|
-| `GetDevice()` | Retrieves and assigns the XR device to track (left hand controller in this script). |
+| `GetDevice()` | Retrieves and assigns the XR device to track (left-hand controller in this script). |
 | `OnEnable()` | Checks device validity and retrieves device information on script initialization. |
 | `Update()` | Continuously fetches the device’s position and updates the UI when changes are detected. |
 
