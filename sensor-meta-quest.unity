@@ -1,0 +1,71 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.UI;
+
+public class Track : MonoBehaviour
+{
+    [SerializeField]
+    public Text valores;  // UI Text component to display position values
+
+    private XRNode lxRNode = XRNode.LeftHand;  // Specifies which XRNode (LeftHand) to track
+
+    private List<InputDevice> devices = new List<InputDevice>(); // List to store available input devices
+    private InputDevice device; // Reference to the current input device
+
+    private bool devicePositionChosen; // Flag to track if the current device position is already recorded
+    private Vector3 devicePositionValue = Vector3.zero; // Current device position
+    private Vector3 prevdevicePositionValue; // Previous recorded position
+
+    // Method to retrieve and store the XR input device
+    void GetDevice()
+    {
+        InputDevices.GetDevicesAtXRNode(lxRNode, devices); // Get devices corresponding to the XRNode (LeftHand)
+        if(devices.Count > 0)
+            device = devices[0]; // Select the first available device
+    }
+
+    // Called when the script instance is enabled
+    void OnEnable()
+    {
+        if (!device.isValid) // Check if the current device reference is valid
+        {
+            GetDevice(); // Attempt to retrieve a valid device if not already valid
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!device.isValid) // Continuously ensure the device is valid
+        {
+            GetDevice();
+        }
+
+        // Define the input feature usage for device position
+        InputFeatureUsage<Vector3> devicePositionsUsage = CommonUsages.devicePosition;
+
+        // Check if the current position has changed from the previously recorded position
+        if (devicePositionValue != prevdevicePositionValue)
+        {
+            devicePositionChosen = false; // If changed, reset the flag
+        }
+
+        // Try getting the current device position, ensuring it's not zero and not already recorded
+        if (device.TryGetFeatureValue(devicePositionsUsage, out devicePositionValue) && 
+            devicePositionValue != Vector3.zero && !devicePositionChosen)
+        {
+            valores.text = devicePositionValue.ToString("F3"); // Update UI with formatted position
+            prevdevicePositionValue = devicePositionValue; // Store the current position as previous
+            devicePositionChosen = true; // Mark current position as recorded
+        }
+        // If position is zero (tracking lost) and previously marked as chosen, update accordingly
+        else if (devicePositionValue == Vector3.zero && devicePositionChosen)
+        {
+            valores.text = devicePositionValue.ToString("F3"); // Display zeroed position
+            prevdevicePositionValue = devicePositionValue; // Update previous position
+            devicePositionChosen = false; // Reset position chosen flag
+        }
+    }
+}
